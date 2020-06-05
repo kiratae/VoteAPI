@@ -44,12 +44,12 @@ var VotingLogs = {
                             res.json({"error": err});
                         }
 
-                        res.json({"vl_id": vl_results.insertId});
+                        res.json({"status": 0, "vl_id": vl_results.insertId});
                         
                     });
 
                 }else{
-                    res.end();
+                    res.json({"status": 1});
                 }
             });
         // }else{
