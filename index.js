@@ -10,7 +10,7 @@ const my_model = require('./model/my_model');
 
 const { Pool } = require('pg');
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: 'postgresql://Kiratae:1150@localhost:51361/mylocaldb',
   ssl: {
     rejectUnauthorized: false
   }

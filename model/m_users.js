@@ -2,9 +2,9 @@ const config = require('../config/config.js')
 const mysql = require('mysql')
 const db = mysql.createConnection(config.mysql_connect)
 
-const { Pool } = require('pg');
+const { Pool, Client } = require('pg');
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL || config.postgresql_connect,
     ssl: {
         rejectUnauthorized: false
     }
@@ -78,7 +78,7 @@ var Users = {
         })
 
     },
-    check_login: (req, res) => {
+    check_login: async (req, res) => {
         const func = "check_login";
         try {
             const client = await pool.connect();
@@ -102,6 +102,8 @@ var Users = {
                 status: 0,
                 data: (result) ? result.rows : null
             }
+
+            await client.end();
 
             res.json(results);
 
