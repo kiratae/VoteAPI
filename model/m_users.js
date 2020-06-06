@@ -87,7 +87,7 @@ var Users = {
             let sql = `SELECT us_id, ut_name_th, ut_name_en, IF(COUNT(us_id) = 1,'true','false') AS canLogin
                     FROM vt_users
                     LEFT JOIN vt_user_type ON ut_id = us_ut_id
-                    WHERE us_username = ? AND us_password = ?`;
+                    WHERE us_username = $1 AND us_password = $2`;
 
             let us_username = req.body.us_username;
             let us_password = req.body.us_password;
