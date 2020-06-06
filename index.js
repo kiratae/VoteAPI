@@ -5,8 +5,7 @@ const multer = require('multer');
 const sharp = require('sharp');
 const bodyParser = require('body-parser');
 const app = express();
-const port_http = 80;
-const port_https = 443;
+const PORT = process.env.PORT || 3000
 const my_model = require('./model/my_model');
 
 const fs = require('fs')
@@ -42,8 +41,7 @@ app.use(function (req, res, next) {
 });
 
 //start Express server on defined port
-app.listen(port_http);
-app.listen(port_https);
+app.listen(PORT);
 
 // Storage file
 var Storage = multer.diskStorage({
