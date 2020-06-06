@@ -4,7 +4,7 @@ const db = mysql.createConnection(config.mysql_connect)
 
 const { Pool, Client } = require('pg');
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || config.postgresql_connect,
+    connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }

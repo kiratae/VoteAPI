@@ -10,7 +10,7 @@ const my_model = require('./model/my_model');
 
 const { Pool } = require('pg');
 const pool = new Pool({
-  connectionString: 'postgresql://Kiratae:1150@localhost:51361/mylocaldb',
+  connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
@@ -73,7 +73,7 @@ console.log('BearHunt, Inc. API server started on: ' + PORT);
 app.get('/db', async (req, res) => {
     try {
         const client = await pool.connect();
-        const result = await client.query('SELECT * FROM test_table');
+        const result = await client.query('SELECT * FROM vt_cluster');
         const results = { 'results': (result) ? result.rows : null};
         res.send(results);
     } catch (err) {
