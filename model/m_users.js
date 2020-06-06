@@ -10,6 +10,8 @@ const pool = new Pool({
     }
 });
 
+const name = "Users";
+
 var Users = {
     get_all: (req, res) => {
         //grab the site section from the req variable (/strains/)
@@ -77,14 +79,9 @@ var Users = {
 
     },
     check_login: (req, res) => {
+        const func = "check_login";
         try {
             const client = await pool.connect();
-
-            //grab the site section from the req variable (/strains/)
-            //console.log(req) to see all the goodies
-            let pathname = req._parsedUrl.pathname.split('/');
-            //split makes an array, so pick the second row
-            let section = pathname[1];
 
             //sql
             let sql = `SELECT us_id, ut_name_th, ut_name_en, IF(COUNT(us_id) = 1,'true','false') AS canLogin
@@ -96,54 +93,25 @@ var Users = {
             let us_password = req.body.us_password;
             let data = [us_username, us_password];
 
-            console.log(`Users -> call: check_login [us_username = ${us_username}]`);
+            console.log(`${name} -> call: ${func} [us_username = ${us_username}]`);
 
             //query the DB using prepared statement
-            const results = await client.query(sql, data, function (err, results, fields) {
-                //if error, print blank results
-                if (err) {
-                    // console.log(err);
-                    var apiResult = {};
+            const result = await client.query(sql, data);
 
-                    apiResult.meta = {
-                        table: section,
-                        type: "collection",
-                        total: 0
-                    }
-                    //create an empty data table
-                    apiResult.data = [];
+            const results = {
+                status: 0,
+                data: (result) ? result.rows : null
+            }
 
-                    //send the results (apiResult) as JSON to Express (res)
-                    //Express uses res.json() to send JSON to client
-                    //you will see res.send() used for HTML
-                    res.json(apiResult);
-
-                }
-
-                //make results 
-                var resultJson = JSON.stringify(results);
-                resultJson = JSON.parse(resultJson);
-                var apiResult = {}
-
-                // create a meta table to help apps
-                //do we have results? what section? etc
-                apiResult.meta = {
-                    table: section,
-                    type: "collection",
-                    total: 1,
-                    total_entries: resultJson.length
-                }
-
-                //add our JSON results to the data table
-                apiResult.data = resultJson;
-
-                //send JSON to Express
-                res.json(apiResult)
-            });
+            res.json(results);
 
         } catch (err) {
-            console.error(err);
-            res.send("Error " + err);
+            console.error(`${name} -> call: ${func} [err = ${err}]`);
+            const results = {
+                status: 1,
+                data: err
+            }
+            res.json(results);
         }
     },
     get_logs: (req, res) => {
