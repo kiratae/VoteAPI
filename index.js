@@ -6,7 +6,7 @@ const sharp = require('sharp');
 const bodyParser = require('body-parser');
 const app = express();
 const router = express.Router();
-const port = 3000;
+const port = 80;
 const my_model = require('./model/my_model');
 
 const fs = require('fs')
