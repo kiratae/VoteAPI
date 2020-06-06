@@ -60,7 +60,7 @@ app.get('/', function (req, res, next) {
 });
 
 //log to console to let us know it's working
-console.log('BearHunt, Inc. API server started on: ' + port);
+console.log('BearHunt, Inc. API server started on: ' + PORT);
 
 app.post('/users/login' , my_model.m_users.Users.check_login)
 app.post('/users/check' , my_model.da_users.Users.can_vote)
