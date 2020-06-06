@@ -8,6 +8,14 @@ const app = express();
 const PORT = process.env.PORT || 3000
 const my_model = require('./model/my_model');
 
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
 const fs = require('fs')
 const { promisify } = require('util')
 
@@ -61,6 +69,19 @@ app.get('/', function (req, res, next) {
 
 //log to console to let us know it's working
 console.log('BearHunt, Inc. API server started on: ' + PORT);
+
+app.get('/db', async (req, res) => {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM test_table');
+        const results = { 'results': (result) ? result.rows : null};
+        res.render('pages/db', results );
+        client.release();
+    } catch (err) {
+        console.error(err);
+        res.send("Error " + err);
+    }
+});
 
 app.post('/users/login' , my_model.m_users.Users.check_login)
 app.post('/users/check' , my_model.da_users.Users.can_vote)
