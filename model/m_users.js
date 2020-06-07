@@ -84,7 +84,7 @@ var Users = {
             const client = await pool.connect();
 
             //sql
-            let sql = `SELECT us_id, ut_name_th, ut_name_en, IF(COUNT(us_id) = 1,'true','false') AS canLogin
+            let sql = `SELECT us_id, us_username, ut_name_th, ut_name_en
                     FROM vt_users
                     LEFT JOIN vt_user_type ON ut_id = us_ut_id
                     WHERE us_username = $1 AND us_password = $2`;
