@@ -2,14 +2,6 @@ const config = require('../config/config.js')
 const mysql = require('mysql')
 const db = mysql.createConnection(config.mysql_connect)
 
-const { Pool, Client } = require('pg');
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
-
 const name = "Users";
 
 var Users = {
@@ -79,42 +71,52 @@ var Users = {
 
     },
     check_login: async (req, res) => {
-        const func = "check_login";
-        try {
-            const client = await pool.connect();
 
-            //sql
-            let sql = `SELECT us_id, ut_name_th, ut_name_en, IF(COUNT(us_id) = 1,'true','false') AS canLogin
-                    FROM vt_users
-                    LEFT JOIN vt_user_type ON ut_id = us_ut_id
-                    WHERE us_username = $1 AND us_password = $2`;
+        //grab the site section from the req variable (/strains/)
+        let pathname = req._parsedUrl.pathname.split('/');
+        //split makes an array, so pick the second row
+        let section = pathname[1];
 
-            let us_username = req.body.us_username;
-            let us_password = req.body.us_password;
-            let data = [us_username, us_password];
+        //sql
+        let sql = `SELECT us_id, ut_name_th, ut_name_en, IF(COUNT(us_id) = 1,'true','false') AS canLogin
+            FROM vt_users
+            LEFT JOIN vt_user_type ON ut_id = us_ut_id
+            WHERE us_username = ? AND us_password = ?`;
 
-            console.log(`${name} -> call: ${func} [us_username = ${us_username}]`);
+        let us_username = req.body.us_username;
+        let us_password = req.body.us_password;
+        let data = [us_username, us_password];
 
-            //query the DB using prepared statement
-            const result = await client.query(sql, data);
+        console.log(`Users -> call: check_login [us_username = ${us_username}]`);
 
-            const results = {
-                status: 0,
-                data: (result) ? result.rows : null
+        //query the DB using prepared statement
+        var results = db.query(sql, data, function (err, results, fields) {
+            //if error, print blank results
+            if (err) {
+                console.log(err);
+                res.json({ "error": err });
             }
 
-            await client.end();
+            //make results 
+            var resultJson = JSON.stringify(results);
+            resultJson = JSON.parse(resultJson);
+            var apiResult = {}
 
-            res.json(results);
-
-        } catch (err) {
-            console.error(`${name} -> call: ${func} [err = ${err}]`);
-            const results = {
-                status: 1,
-                data: err
+            // create a meta table to help apps
+            //do we have results? what section? etc
+            apiResult.meta = {
+                table: section,
+                type: "collection",
+                total: 1,
+                total_entries: resultJson.length
             }
-            res.json(results);
-        }
+
+            //add our JSON results to the data table
+            apiResult.data = resultJson;
+
+            //send JSON to Express
+            res.json(apiResult)
+        });
     },
     get_logs: (req, res) => {
 
