@@ -6,7 +6,7 @@ const sharp = require('sharp');
 const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000
-const my_model = require('./model/my_model');
+const my_model = require('./.model/my_model');
 
 const { Pool } = require('pg');
 const pool = new Pool({
@@ -82,8 +82,10 @@ app.get('/db', async (req, res) => {
     }
 });
 
+// input: us_username, us_password
 app.post('/users/login' , my_model.m_users.Users.check_login)
-app.post('/users/check' , my_model.da_users.Users.can_vote)
+// ❗❗[deprecated] input: us_id, sc_score
+// app.post('/users/check' , my_model.da_users.Users.can_vote)
 app.put('/users/logged_in' , my_model.da_users.Users.update_login)
 app.get('/users/logs/:us_id' , my_model.m_users.Users.get_logs)
 
