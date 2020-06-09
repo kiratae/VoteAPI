@@ -1,6 +1,6 @@
 import { BaseRepository } from "./BaseRepository";
-import { IUserRepository, UserFilter, User } from "../../Model/model";
-import { Logger, LoggerFactory } from "../../Library";
+import { IUserRepository, UserFilter, User } from "../../Model/Model";
+import { Logger, LoggerFactory } from "../../Library/Library";
 import { Pool, Client } from "pg";
 import { EntityConfigSection } from "../EntityConfigSection";
 

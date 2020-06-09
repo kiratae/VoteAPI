@@ -1,5 +1,5 @@
 import express = require('express');
-import { UserService, IUserRepository, IUserService, UserFilter } from '../Model/model';
+import { UserService, IUserRepository, IUserService, UserFilter } from '../Model/Model';
 import { container } from 'tsyringe';
 import { UserRepository } from '../Entity.Postgresql/Entity';
 

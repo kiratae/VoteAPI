@@ -1,0 +1,24 @@
+{
+    "configuration": {
+        "connectionStrings": {
+            "vote": "",
+            "intra": ""
+        },
+        "tsyringe": {
+            "alias": [
+                "IUserService",
+                "UserService",
+
+                "IUserRepository",
+                "UserRepository"
+            ],
+            "container": {
+                "register": [
+                    { "token": "IUserService", "useClass": "UserService" },
+
+                    { "token": "IUserRepository", "useClass": "UserRepository" }
+                ]
+            }
+        }
+    }
+}

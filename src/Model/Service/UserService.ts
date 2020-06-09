@@ -1,5 +1,5 @@
-import { UserFilter, User, IUserService } from "../model";
-import { LoggerFactory, Logger } from "../../Library";
+import { UserFilter, User, IUserService } from "../Model";
+import { LoggerFactory, Logger } from "../../Library/Library";
 import { BaseService } from "./BaseService";
 import { injectable, inject } from "tsyringe";
 import { IUserRepository } from "../RepositoryModel/IUserRepository";

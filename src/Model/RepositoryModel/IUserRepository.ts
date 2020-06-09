@@ -1,4 +1,4 @@
-import { UserFilter, User } from "../model";
+import { UserFilter, User } from "../Model";
 
 export interface IUserRepository {
 
@@ -11,4 +11,3 @@ export interface IUserRepository {
     DeleteData(id: Number): Boolean;
 
 }
-
